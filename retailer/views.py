@@ -6,7 +6,7 @@ def retailers_list(request):
     retailers = Retailer.objects.all()
     return render(request, 'retailer/list.html', {'retailers': retailers})
 
-def reteilers_detail(request, id):
+def reteiler_details(request, id):
     retailer = get_object_or_404(
         Retailer,
         id=id

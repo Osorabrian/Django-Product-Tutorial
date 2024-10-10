@@ -12,3 +12,4 @@ class ProductAdmin(admin.ModelAdmin):
     date_hierarchy = 'listed'
     raw_id_fields = ['retailer']
     ordering = ['listed', 'name', 'price']
+    show_facets = admin.ShowFacets.ALWAYS

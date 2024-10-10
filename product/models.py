@@ -1,6 +1,10 @@
 from django.db import models
 from django.utils import timezone
 
+class ProductManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(stock_size__gt = 0)
+    
 # product model
 class Product(models.Model):
     
@@ -34,7 +38,10 @@ class Product(models.Model):
     listed = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
+    
+    objects = models.Manager()
+    stocked = ProductManager()
+    
     def __str__(self):
         return self.name
     

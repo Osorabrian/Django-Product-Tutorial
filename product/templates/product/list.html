@@ -9,4 +9,5 @@
         <p>{{product.description}}</p>
         <p>{{product.price}}</P>
     {% endfor %}
+    {% include 'pagination.html' with page=page_obj %}
 {%endblock%}

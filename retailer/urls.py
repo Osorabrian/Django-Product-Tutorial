@@ -5,5 +5,5 @@ app_name = 'retailer'
 
 urlpatterns = [
     path('', views.retailers_list, name="retailers_list"),
-    path('<int:id>/', views.retailer_details, name="retailer_details")
+    path('<int:year>/<int:month>/<int:day>/<slug:name>', views.retailer_details, name="retailer_details")
 ]

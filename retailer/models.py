@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
 # Create your models here.
@@ -12,6 +13,17 @@ class Retailer(models.Model):
     
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse(
+        'retailer/detail.html',
+        args = [
+            self.registered.year,
+            self.registered.month,
+            self.registered.day,
+            self.slug
+        ]
+        )
     
     class Meta:
         indexes = [models.Index(fields=('name',))]

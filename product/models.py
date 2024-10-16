@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.urls import reverse
 
 class ProductManager(models.Manager):
     def get_queryset(self):
@@ -15,7 +16,7 @@ class Product(models.Model):
         EXTRA_LARGE = 'XL', 'Extra large'
         
     name = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250)
+    slug = models.SlugField(max_length=250, unique_for_date='listed')
     description = models.TextField()
     
     size = models.CharField(
@@ -44,6 +45,17 @@ class Product(models.Model):
     
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse(
+            'product:product_details',
+            args=[
+            self.listed.year,
+            self.listed.month,
+            self.listed.day,
+            self.slug
+            ]
+        )
     
     class Meta:
         ordering = ['-listed']

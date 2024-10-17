@@ -8,4 +8,5 @@
     <p>{{retialer.slug}}</p>
     <p>{{retailer.description}}</p>
     {% endfor %}
+    {% include 'pagination.html' with page=page_obj %}
 {% endblock %}

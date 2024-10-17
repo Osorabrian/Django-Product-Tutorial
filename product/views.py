@@ -3,6 +3,7 @@ from .models import Product
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from .forms import EmailPostForm
+from django.core.mail import send_mail
 
 class ProductListView(ListView):
     queryset = Product.objects.all() # or model = Product
@@ -33,20 +34,42 @@ def product_details(request, year, month, day, post):
     )
     return render(request, 'product/detail.html', {'product': product})
 
-def post_form(request, id):
-    post = get_object_or_404(
+def product_share(request, id):
+    product = get_object_or_404(
         Product,
         id=id
     )
+    sent = False
     
     if request.method == 'POST':
         form = EmailPostForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
+            product_url = request.build_absolute_uri(
+                product.get_absolute_url
+            )
+            subject = (
+                f"{cd['name']} ({cd['email']})"
+                f"recommends you to check out {product.name}"
+            )
+            
+            message = (
+                f"Check out {product.name} at {product_url}"
+            )
+            
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email=None,
+                receipient_list=[cd['to']]
+            )
+            
+            sent=True
     else:
         form = EmailPostForm()
     
     return render(
         request,
-        'product/share.html'
+        'product/share.html',
+        {'form': form, 'product': product, 'sent': sent}
     )

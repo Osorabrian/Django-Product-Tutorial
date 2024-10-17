@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404,render
 from .models import Product
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
-from .forms import EmailPostForm
+from .forms import EmailProductForm
 from django.core.mail import send_mail
 
 class ProductListView(ListView):
@@ -42,7 +42,7 @@ def product_share(request, id):
     sent = False
     
     if request.method == 'POST':
-        form = EmailPostForm(request.POST)
+        form = EmailProductForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
             product_url = request.build_absolute_uri(
@@ -61,12 +61,12 @@ def product_share(request, id):
                 subject=subject,
                 message=message,
                 from_email=None,
-                receipient_list=[cd['to']]
+                recipient_list=[cd['to']]
             )
             
             sent=True
     else:
-        form = EmailPostForm()
+        form = EmailProductForm()
     
     return render(
         request,

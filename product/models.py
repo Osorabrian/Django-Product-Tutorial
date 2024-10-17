@@ -63,5 +63,26 @@ class Product(models.Model):
             models.Index(fields=('-listed',))
             ]
         
+class Comment(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    name = models.CharField(max_length=80)
+    email = models.EmailField()
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    active= models.BooleanField(default=True)
+    
+    def __str__(self):
+        return f"comment by {self.name} on {self.product}"
+    
+    class Meta:
+        ordering = ['created']
+        indexes = [models.Index(fields=['created']),]
+    
+        
         
     

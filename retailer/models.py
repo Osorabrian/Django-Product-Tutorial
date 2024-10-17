@@ -16,7 +16,7 @@ class Retailer(models.Model):
     
     def get_absolute_url(self):
         return reverse(
-        'retailer/detail.html',
+        'retailer:retailer_details',
         args = [
             self.registered.year,
             self.registered.month,

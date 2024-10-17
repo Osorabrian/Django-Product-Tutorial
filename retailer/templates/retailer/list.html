@@ -1,0 +1,11 @@
+{% extends '../base.html'%}
+
+{% block title %}Retailers{% endblock %}
+
+{% block content %}
+    {% for retailer in retailers%}
+    <h1><a href={{ retailer.get_absolute_url }}>{{retailer.name}}</a></h1>
+    <p>{{retialer.slug}}</p>
+    <p>{{retailer.description}}</p>
+    {% endfor %}
+{% endblock %}

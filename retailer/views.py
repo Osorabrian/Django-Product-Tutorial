@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404,render
 from .models import Retailer
 from django.views.generic import ListView
+from .forms import ShareRetailer
+from django.core.mail import send_mail
 
 class RetailerListView(ListView):
     queryset = Retailer.objects.all()
@@ -22,3 +24,40 @@ def retailer_details(request, year, month, day, name):
     )
     
     return render(request, 'retailer/detail.html', {'retailer': retailer})
+
+def retailer_share(request, retailer_id):
+    retailer = get_object_or_404(
+        Retailer,
+        id=retailer_id
+    )
+    
+    if request.method == 'POST':
+        
+        form = ShareRetailer(request.POST)
+        if form.is_valid():
+            
+            cd = form.cleaned_data
+            
+            retailer_url = request.get_absolute_uri(
+                Retailer.get_absolute_url
+            )
+            
+            subject=(f" Checkout {cd[retailer.name]} ")
+            message= (f" Please checkout {Retailer.name} at {retailer_url} ")
+            
+            send_mail(
+                subject= subject,
+                message=message,
+                from_email = None,
+                recipient_list=[cd['to']]
+                
+            )
+        else:
+            form = ShareRetailer()
+        
+    
+    return render (
+        request,
+        'retailer/share.html',
+        {'form': form, 'retailer': retailer}
+    )

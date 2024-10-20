@@ -1,0 +1,12 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <h1>Share this reteiler</h1>
+    {% if sent%}
+        <p>Email has been sent</p>
+    {% else %}
+        {{form.as_p}}
+        {% csrf_token %}
+    {% endif %}
+</html>

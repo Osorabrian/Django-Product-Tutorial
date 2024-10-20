@@ -5,6 +5,6 @@ class ShareRetailer(forms.Form):
     email = forms.EmailField()
     to = forms.EmailField()
     comment = forms.CharField(
-        require=False,
+        required=False,
         widget=forms.Textarea
     )

@@ -30,7 +30,7 @@ def retailer_share(request, retailer_id):
         Retailer,
         id=retailer_id
     )
-    
+    sent = False
     if request.method == 'POST':
         
         form = ShareRetailer(request.POST)
@@ -52,10 +52,11 @@ def retailer_share(request, retailer_id):
                 recipient_list=[cd['to']]
                 
             )
+            
+            sent=True
         else:
             form = ShareRetailer()
-        
-    
+                
     return render (
         request,
         'retailer/share.html',

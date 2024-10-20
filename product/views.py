@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404,render
-from .models import Product
+from .models import Product, Comment
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
-from .forms import EmailProductForm
+from django.views.decorators.http import require_POST
+from .forms import EmailProductForm, CommentForm
 from django.core.mail import send_mail
 
 class ProductListView(ListView):
@@ -32,7 +33,9 @@ def product_details(request, year, month, day, post):
         listed__month = month,
         listed__day = day
     )
-    return render(request, 'product/detail.html', {'product': product})
+    comments = product.comments.filter(active=True)
+    form = CommentForm()
+    return render(request, 'product/detail.html', {'product': product, 'comments': comments, 'form': form})
 
 def product_share(request, id):
     product = get_object_or_404(
@@ -72,4 +75,23 @@ def product_share(request, id):
         request,
         'product/share.html',
         {'form': form, 'product': product, 'sent': sent}
+    )
+    
+@require_POST
+def product_comment(request, id):
+    product = get_object_or_404(
+        Product,
+        id=id
+    )
+    comment = None
+    form = CommentForm(data=request.POST)
+    if form.is_valid():
+        comment = form.save(commit = False)
+        comment.product = product
+        comment.save()
+    
+    return render(
+        request,
+        'product/comment.html',
+        {'product': product, 'form': form, 'comment': comment}
     )

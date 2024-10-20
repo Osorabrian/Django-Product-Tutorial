@@ -8,4 +8,24 @@
     <p>{{product.description}}</p>
     <p>{{product.retailer}}</p>
     <p>{{product.price}}</p>
+    <p>
+        <a href={% url 'product:product_share' product.id %}>
+            Share this product
+        </a>
+    </p>
+    {% with comments.count as total_comments %}
+        <h2>{{total_comments}} comment{{total_comments|pluralize}}</h2>
+    {% endwith %}
+    {% for comment in comments %}
+            <div>
+                <p>
+                    comment {{forloop.counter}} by {{comment.name}}
+                    {{comment.created}}
+                </p>
+                {{comment.body|linebreaks}}
+            </div>
+    {% empty %}
+            <p>There are no comments</p>
+    {% endfor %}
+    {% include './includes/comment_form.html'%}
 {%endblock%}

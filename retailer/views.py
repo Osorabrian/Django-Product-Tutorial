@@ -25,10 +25,10 @@ def retailer_details(request, year, month, day, name):
     
     return render(request, 'retailer/detail.html', {'retailer': retailer})
 
-def retailer_share(request, retailer_id):
+def retailer_share(request, id):
     retailer = get_object_or_404(
         Retailer,
-        id=retailer_id
+        id=id
     )
     sent = False
     if request.method == 'POST':
@@ -38,12 +38,12 @@ def retailer_share(request, retailer_id):
             
             cd = form.cleaned_data
             
-            retailer_url = request.get_absolute_uri(
-                Retailer.get_absolute_url
+            retailer_url = request.build_absolute_uri(
+                retailer.get_absolute_url
             )
             
-            subject=(f" Checkout {cd[retailer.name]} ")
-            message= (f" Please checkout {Retailer.name} at {retailer_url} ")
+            subject=(f" Checkout {retailer.name} ")
+            message= (f" Please checkout {retailer.name} at {retailer_url} ")
             
             send_mail(
                 subject= subject,
@@ -54,11 +54,11 @@ def retailer_share(request, retailer_id):
             )
             
             sent=True
-        else:
-            form = ShareRetailer()
+    else:
+        form = ShareRetailer()
                 
     return render (
         request,
         'retailer/share.html',
-        {'form': form, 'retailer': retailer}
+        {'form': form, 'retailer': retailer, 'sent': sent}
     )

@@ -2,11 +2,15 @@
 
 <!DOCTYPE html>
 <html>
-    <h1>Share this reteiler</h1>
+    <h1>Share this retailer</h1>
     {% if sent%}
         <p>Email has been sent</p>
+        <a href={{ retailer.get_absolute_url }}>Go back to retailer</a>
     {% else %}
-        {{form.as_p}}
-        {% csrf_token %}
+        <form method="post">
+            {{form.as_p}}
+            {% csrf_token %}
+            <input type="submit" value="share retailer"/>
+        </form>
     {% endif %}
 </html>

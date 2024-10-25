@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 class ProductManager(models.Manager):
     def get_queryset(self):
@@ -39,6 +40,7 @@ class Product(models.Model):
     listed = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    tags = TaggableManager()
     
     objects = models.Manager()
     stocked = ProductManager()

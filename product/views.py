@@ -5,25 +5,32 @@ from django.views.generic import ListView
 from django.views.decorators.http import require_POST
 from .forms import EmailProductForm, CommentForm
 from django.core.mail import send_mail
-
-class ProductListView(ListView):
-    queryset = Product.objects.all() # or model = Product
-    context_object_name = 'products'
-    paginate_by = 3
-    template_name = 'product/list.html'
+from taggit.models import Tag
+ 
+# class ProductListView(ListView):
+#     queryset = Product.objects.all() # or model = Product
+#     context_object_name = 'products'
+#     paginate_by = 3
+#     template_name = 'product/list.html'
     
 # Create your views here.
-# def products_list(request):
-#     products_list = Product.objects.all()
-#     paginator = Paginator(products_list, 3)
-#     page_number = request.GET.get('page', 1)
-#     try:
-#         products = paginator.page(page_number)
-#     except EmptyPage:
-#         products = paginator.page(paginator.num_pages)
-#     except PageNotAnInteger:
-#         products = paginator.page(1)     
-#     return render(request, 'product/list.html', {'products': products})
+def products_list(request, tag_slug = None):
+    products_list = Product.objects.all()
+    
+    tags = None
+    if tag_slug:
+        tags = get_object_or_404(Tag, slug = tag_slug)
+        products_list = products_list.filter(tags__in=[tags])
+        
+    paginator = Paginator(products_list, 3)
+    page_number = request.GET.get('page', 1)
+    try:
+        products = paginator.page(page_number)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+    except PageNotAnInteger:
+        products = paginator.page(1)     
+    return render(request, 'product/list.html', {'products': products, "tags": tags})
 
 def product_details(request, year, month, day, post):
     product = get_object_or_404(

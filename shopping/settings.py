@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'product.apps.ProductConfig',
-    'retailer.apps.RetailerConfig'
+    'retailer.apps.RetailerConfig',
+    'taggit'
 ]
 
 MIDDLEWARE = [

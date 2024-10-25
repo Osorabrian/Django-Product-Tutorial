@@ -27,5 +27,14 @@
     {% empty %}
             <p>There are no comments</p>
     {% endfor %}
+
     {% include './includes/comment_form.html'%}
+    
+    <h2>Similar Products</h2>
+    {% for product in similar_products %}
+        <a href="{{product.get_absolute_url}}">
+            <p>{{product}}</p>
+        </a>
+    {% endfor %}
+
 {%endblock%}

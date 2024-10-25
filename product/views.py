@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST
 from .forms import EmailProductForm, CommentForm
 from django.core.mail import send_mail
 from taggit.models import Tag
+from django.db.models import Count
  
 # class ProductListView(ListView):
 #     queryset = Product.objects.all() # or model = Product
@@ -40,9 +41,13 @@ def product_details(request, year, month, day, post):
         listed__month = month,
         listed__day = day
     )
+    
+    products_tags = product.tags.values_list('id', flat=True)
+    similar_products = Product.objects.filter(tags__in=products_tags).exclude(id=product.id).annotate(same_tags = Count("tags")).order_by("-same_tags", "-listed")
+    
     comments = product.comments.filter(active=True)
     form = CommentForm()
-    return render(request, 'product/detail.html', {'product': product, 'comments': comments, 'form': form})
+    return render(request, 'product/detail.html', {'product': product, 'comments': comments, 'form': form, "similar_products": similar_products})
 
 def product_share(request, id):
     product = get_object_or_404(

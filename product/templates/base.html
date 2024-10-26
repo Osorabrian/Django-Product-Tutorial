@@ -1,4 +1,5 @@
 {% load static %}
+{% load product_tags %}
 
 <!DOCTYPE>
 <html5>
@@ -12,5 +13,20 @@
     {%block content%}
     {% endblock %}
 </body>
+
+<h3>I have listed {% total_products %} products </h3>
+
+<h3>Most Recent Listed Products</h3>
+{% most_recent_listings %}
+
+<h3>Most commented Products</h3>
+{% most_commented_listings as most_commented %}
+<ul>
+    {% for product in most_commented %}
+        <li>
+            <a href={{product.get_absolute_url }}>{{product.name}}</a>
+        </li>
+    {% endfor %}
+</ul>
 
 </html>

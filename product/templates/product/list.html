@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load product_tags %}
 
 {%block title%}product Detail{% endblock %}
 
@@ -18,7 +19,7 @@
                 </a>
             {% endfor %}
         </p>
-        <p>{{product.description}}</p>
+        <p>{{product.description|markdown|truncatewords_html:10}}</p>
         <p>{{product.price}}</P>
         <p>
             <a href={% url 'product:product_share' product.id %}>
